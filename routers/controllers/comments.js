@@ -1,13 +1,5 @@
 const commentsModel = require("./../../db/models/comments");
 
-const getCommentsForPost = (req, res) => {
-  // code
-};
-
-const getComment = (req, res) => {
-  // code
-};
-
 const addComment = (req, res) => {
   const { description, postID } = req.body;
 
@@ -105,8 +97,6 @@ const deleteUserComment = (req, res) => {
 };
 
 module.exports = {
-  getCommentsForPost,
-  getComment,
   addComment,
   updateComment,
   deleteComment,

@@ -1,8 +1,6 @@
 const express = require("express");
 
 const {
-  getCommentsForPost,
-  getComment,
   addComment,
   updateComment,
   deleteComment,
@@ -13,8 +11,6 @@ const authorization = require("../middlewares/authorization");
 
 const commentsRouter = express.Router();
 
-commentsRouter.get("/comments", authentication, getCommentsForPost);
-commentsRouter.get("/comments/:id", authentication, getComment);
 commentsRouter.post("/comments", authentication, addComment);
 commentsRouter.put("/comments/:id", authentication, updateComment);
 commentsRouter.put("/comments/:id", authentication, deleteComment);

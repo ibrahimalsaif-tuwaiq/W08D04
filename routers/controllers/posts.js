@@ -1,9 +1,11 @@
 const postsModel = require("./../../db/models/posts");
+const commentsModel = require("./../../db/models/comments");
 const likesModel = require("./../../db/models/likes");
 
 const getPosts = (req, res) => {
   postsModel
     .find({ createdBy: req.token.id, deleted: false })
+    .populate("createdBy")
     .then((result) => {
       if (result.length > 0) {
         res.status(200).json(result);
@@ -21,9 +23,21 @@ const getPost = (req, res) => {
 
   postsModel
     .findOne({ _id: id, createdBy: req.token.id, deleted: false })
-    .then((result) => {
-      if (result) {
-        res.status(200).json(result);
+    .populate("createdBy")
+    .then((post) => {
+      if (post) {
+        commentsModel
+          .find({ post: id, deleted: false })
+          .populate("createdBy")
+          .then((comments) => {
+            likesModel.find({ post: id, like: true }).then((likes) => {
+              if (comments.length > 0) {
+                res.status(200).json({ post, comments, likes: likes.length });
+              } else {
+                res.status(200).json({ post, likes: likes.length });
+              }
+            });
+          });
       } else {
         res
           .status(404)

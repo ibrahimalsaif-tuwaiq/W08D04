@@ -45,7 +45,7 @@ const updateComment = (req, res) => {
       } else {
         res
           .status(404)
-          .json({ message: `There is no todo with this ID: ${id}` });
+          .json({ message: `There is no comment with this ID: ${id}` });
       }
     })
     .catch((err) => {
@@ -54,7 +54,30 @@ const updateComment = (req, res) => {
 };
 
 const deleteComment = (req, res) => {
-  // code
+  const { id } = req.params;
+  const { postID } = req.body;
+
+
+  commentsModel
+    .findOneAndUpdate(
+      { _id: id, post: postID, createdBy: req.token.id, deleted: false },
+      { deleted: true },
+      { new: true }
+    )
+    .then((result) => {
+      if (result) {
+        res
+          .status(200)
+          .json({ message: "The Comment has been deleted successfully" });
+      } else {
+        res
+          .status(404)
+          .json({ message: `There is no comment with this ID: ${id}` });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const deleteUserComment = (req, res) => {

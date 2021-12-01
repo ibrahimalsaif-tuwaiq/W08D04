@@ -26,7 +26,7 @@ const getPost = (req, res) => {
       } else {
         res
           .status(404)
-          .json({ message: `There is no todo with this ID: ${id}` });
+          .json({ message: `There is no post with this ID: ${id}` });
       }
     })
     .catch((err) => {
@@ -72,7 +72,7 @@ const updatePost = (req, res) => {
       } else {
         res
           .status(404)
-          .json({ message: `There is no todo with this ID: ${id}` });
+          .json({ message: `There is no post with this ID: ${id}` });
       }
     })
     .catch((err) => {
@@ -97,7 +97,7 @@ const deletePost = (req, res) => {
       } else {
         res
           .status(404)
-          .json({ message: `There is no todo with this ID: ${id}` });
+          .json({ message: `There is no post with this ID: ${id}` });
       }
     })
     .catch((err) => {
@@ -122,7 +122,7 @@ const deleteUserPost = (req, res) => {
       } else {
         res
           .status(404)
-          .json({ message: `There is no todo with this ID: ${id}` });
+          .json({ message: `There is no post with this ID: ${id}` });
       }
     })
     .catch((err) => {

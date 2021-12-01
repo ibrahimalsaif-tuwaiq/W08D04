@@ -17,7 +17,7 @@ commentsRouter.get("/comments", authentication, getCommentsForPost);
 commentsRouter.get("/comments/:id", authentication, getComment);
 commentsRouter.post("/comments", authentication, addComment);
 commentsRouter.put("/comments/:id", authentication, updateComment);
-commentsRouter.delete("/comments/:id", authentication, deleteComment);
+commentsRouter.put("/comments/:id", authentication, deleteComment);
 commentsRouter.put("/deleteComment", authentication, authorization, deleteUserComment);
 
 module.exports = commentsRouter;

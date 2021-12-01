@@ -13,7 +13,7 @@ const commentsRouter = express.Router();
 
 commentsRouter.post("/comments", authentication, addComment);
 commentsRouter.put("/comments/:id", authentication, updateComment);
-commentsRouter.put("/comments/:id", authentication, deleteComment);
+commentsRouter.put("/commentDelete/:id", authentication, deleteComment);
 commentsRouter.put("/deleteComment", authentication, authorization, deleteUserComment);
 
 module.exports = commentsRouter;

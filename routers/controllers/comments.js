@@ -9,7 +9,22 @@ const getComment = (req, res) => {
 };
 
 const addComment = (req, res) => {
-  // code
+  const { description, postID } = req.body;
+
+  const newComment = new commentsModel({
+    description,
+    post: postID,
+    createdBy: req.token.id,
+  });
+
+  newComment
+    .save()
+    .then((result) => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const updateComment = (req, res) => {

@@ -115,7 +115,46 @@ const deleteAccount = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  // code
+  const { id } = req.params;
+
+  usersModel
+    .findByIdAndUpdate(id, { deleted: true })
+    .then((result) => {
+      if (result) {
+        postsModel
+          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
+          .then(() => {
+            console.log(`All the posts for user:${id} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        commentsModel
+          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
+          .then(() => {
+            console.log(`All the comments for user:${id} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        likesModel
+          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
+          .then(() => {
+            console.log(`All the likes for user:${id} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        res.status(200).json({ message: "User has been deleted successfully" });
+      } else {
+        res
+          .status(404)
+          .json({ message: `There is no user with this ID: ${id}` });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 module.exports = { signup, login, getUsers, deleteAccount, deleteUser };

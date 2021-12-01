@@ -1,7 +1,18 @@
 const postsModel = require("./../../db/models/posts");
 
 const getPosts = (req, res) => {
-  // code
+    postsModel
+    .find({ createdBy: req.token.id, deleted: false })
+    .then((result) => {
+      if (result.length > 0) {
+        res.status(200).json(result);
+      } else {
+        res.status(404).json({ message: "There is no posts yet!!" });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const getPost = (req, res) => {

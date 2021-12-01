@@ -54,7 +54,30 @@ const addPost = (req, res) => {
 };
 
 const updatePost = (req, res) => {
-  // code
+  const { id } = req.params;
+  const { image, description } = req.body;
+
+  postsModel
+    .findOneAndUpdate(
+      { _id: id, createdBy: req.token.id, deleted: false },
+      {
+        image,
+        description,
+      },
+      { new: true }
+    )
+    .then((result) => {
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        res
+          .status(404)
+          .json({ message: `There is no todo with this ID: ${id}` });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const deletePost = (req, res) => {

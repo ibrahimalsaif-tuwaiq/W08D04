@@ -13,6 +13,10 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
+// Roles Router
+const rolesRouter = require("./routers/routes/roles");
+app.use(rolesRouter);
+
 // Get PORT variable from .env
 const PORT = process.env.PORT;
 

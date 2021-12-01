@@ -1,0 +1,21 @@
+const express = require("express");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+
+// Config .env file
+dotenv.config();
+
+// Iinitiating the app
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(morgan("dev"));
+
+// Get PORT variable from .env
+const PORT = process.env.PORT;
+
+// Start the app
+app.listen(PORT, () => {
+  console.log(`SERVER ON PORT ${PORT}`);
+});

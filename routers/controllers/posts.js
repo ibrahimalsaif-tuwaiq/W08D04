@@ -9,7 +9,22 @@ const getPost = (req, res) => {
 };
 
 const addPost = (req, res) => {
-  // code
+  const { image, description } = req.body;
+
+  const newPost = new postsModel({
+    image,
+    description,
+    createdBy: req.token.id,
+  });
+
+  newPost
+    .save()
+    .then((result) => {
+      res.status(201).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const updatePost = (req, res) => {

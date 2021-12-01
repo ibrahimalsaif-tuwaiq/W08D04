@@ -85,22 +85,22 @@ const likePost = (req, res) => {
   const { id } = req.params;
   const { like } = req.body;
 
-  if (!like) {
+  if (like) {
     likesModel
-      .findOne({ post: id, createdBy: req.token.id, like: true })
+      .findOne({ post: id, createdBy: req.token.id })
       .then((result) => {
         if (result) {
           likesModel
             .findOneAndUpdate(
-              { post: id, createdBy: req.token.id, like: true },
-              { like: false },
+              { post: id, createdBy: req.token.id, like: false },
+              { like: true },
               { new: true }
             )
             .then((result) => {
               if (result) {
                 res
                   .status(200)
-                  .json({ message: "The Post has been disliked successfully" });
+                  .json({ message: "The Post has been liked successfully" });
               } else {
                 res
                   .status(404)
@@ -132,15 +132,15 @@ const likePost = (req, res) => {
   } else {
     likesModel
       .findOneAndUpdate(
-        { post: id, createdBy: req.token.id, like: false },
-        { like: true },
+        { post: id, createdBy: req.token.id, like: true },
+        { like: false },
         { new: true }
       )
       .then((result) => {
         if (result) {
           res
             .status(200)
-            .json({ message: "The Post has been liked successfully" });
+            .json({ message: "The Post has been disliked successfully" });
         } else {
           res
             .status(404)

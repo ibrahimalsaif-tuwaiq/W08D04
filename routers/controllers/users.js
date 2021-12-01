@@ -111,7 +111,6 @@ const getUsers = (req, res) => {
 };
 
 const deleteAccount = (req, res) => {
-
   usersModel
     .findByIdAndUpdate(req.token.id, { deleted: true })
     .then((result) => {

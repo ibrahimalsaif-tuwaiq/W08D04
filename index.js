@@ -21,6 +21,10 @@ app.use(rolesRouter);
 const usersRouter = require("./routers/routes/users");
 app.use(usersRouter);
 
+// Posts Router
+const postsRouter = require("./routers/routes/posts");
+app.use(postsRouter);
+
 // Get PORT variable from .env
 const PORT = process.env.PORT;
 

@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-// Comments Schema
-const commentsSchema = new mongoose.Schema({
-  description: {
-    type: String,
-    required: true,
+// Likes Schema
+const likesSchema = new mongoose.Schema({
+  like: {
+    type: Boolean,
+    default: false,
   },
   post: {
     type: mongoose.Schema.Types.ObjectId,
@@ -20,12 +20,8 @@ const commentsSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  deleted: {
-    type: Boolean,
-    default: false,
-  },
 });
 
-const commentsModel = mongoose.model("comments", commentsSchema);
+const likesModel = mongoose.model("likes", likesSchema);
 
-module.exports = commentsModel;
+module.exports = likesModel;

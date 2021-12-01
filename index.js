@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+require("./db");
 
 // Config .env file
 dotenv.config();

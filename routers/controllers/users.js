@@ -86,7 +86,9 @@ const login = (req, res) => {
               .json({ message: "Invalid Email/Username or Password!!" });
           }
         } else {
-          res.status(404).json({ message: "This user is deactivated you can't login!!" });
+          res
+            .status(404)
+            .json({ message: "This user is deactivated you can't login!!" });
         }
       } else {
         res.status(404).json({ message: "Email/Username does not exist!!" });
@@ -98,7 +100,14 @@ const login = (req, res) => {
 };
 
 const getUsers = (req, res) => {
-  // code
+  usersModel
+    .find({ deleted: false })
+    .then((result) => {
+      res.status(200).json(result);
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const deleteAccount = (req, res) => {

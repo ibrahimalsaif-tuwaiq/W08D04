@@ -91,7 +91,9 @@ const deletePost = (req, res) => {
     )
     .then((result) => {
       if (result) {
-        res.status(200).json({ message: "The Post has been deleted successfully" });
+        res
+          .status(200)
+          .json({ message: "The Post has been deleted successfully" });
       } else {
         res
           .status(404)
@@ -104,7 +106,28 @@ const deletePost = (req, res) => {
 };
 
 const deleteUserPost = (req, res) => {
-  // code
+  const { postID, creatorID } = req.body;
+
+  postsModel
+    .findOneAndUpdate(
+      { _id: postID, createdBy: creatorID, deleted: false },
+      { deleted: true },
+      { new: true }
+    )
+    .then((result) => {
+      if (result) {
+        res
+          .status(200)
+          .json({ message: "The Post has been deleted successfully" });
+      } else {
+        res
+          .status(404)
+          .json({ message: `There is no todo with this ID: ${id}` });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 module.exports = {

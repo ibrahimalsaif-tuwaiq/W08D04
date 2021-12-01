@@ -18,6 +18,6 @@ postsRouter.get("/posts/:id", authentication, getPost);
 postsRouter.post("/posts", authentication, addPost);
 postsRouter.put("/posts/:id", authentication, updatePost);
 postsRouter.delete("/posts/:id", authentication, deletePost);
-postsRouter.delete("/deletePost/:id", authentication, authorization, deleteUserPost);
+postsRouter.put("/deletePost", authentication, authorization, deleteUserPost);
 
 module.exports = postsRouter;

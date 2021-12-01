@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const likesSchema = new mongoose.Schema({
   like: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   post: {
     type: mongoose.Schema.Types.ObjectId,

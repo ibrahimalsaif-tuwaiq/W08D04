@@ -1,4 +1,5 @@
 const postsModel = require("./../../db/models/posts");
+const likesModel = require("./../../db/models/likes");
 
 const getPosts = (req, res) => {
   postsModel
@@ -80,6 +81,78 @@ const updatePost = (req, res) => {
     });
 };
 
+const likePost = (req, res) => {
+  const { id } = req.params;
+  const { like } = req.body;
+
+  if (!like) {
+    likesModel
+      .findOne({ post: id, createdBy: req.token.id, like: true })
+      .then((result) => {
+        if (result) {
+          likesModel
+            .findOneAndUpdate(
+              { post: id, createdBy: req.token.id, like: true },
+              { like: false },
+              { new: true }
+            )
+            .then((result) => {
+              if (result) {
+                res
+                  .status(200)
+                  .json({ message: "The Post has been disliked successfully" });
+              } else {
+                res
+                  .status(404)
+                  .json({ message: `There is no post with this ID: ${id}` });
+              }
+            })
+            .catch((err) => {
+              res.status(400).json(err);
+            });
+        } else {
+          const newLike = new likesModel({
+            post: id,
+            createdBy: req.token.id,
+          });
+
+          newLike
+            .save()
+            .then((result) => {
+              res.status(201).json(result);
+            })
+            .catch((err) => {
+              res.status(400).json(err);
+            });
+        }
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  } else {
+    likesModel
+      .findOneAndUpdate(
+        { post: id, createdBy: req.token.id, like: false },
+        { like: true },
+        { new: true }
+      )
+      .then((result) => {
+        if (result) {
+          res
+            .status(200)
+            .json({ message: "The Post has been liked successfully" });
+        } else {
+          res
+            .status(404)
+            .json({ message: `There is no post with this ID: ${id}` });
+        }
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  }
+};
+
 const deletePost = (req, res) => {
   const { id } = req.params;
 
@@ -137,4 +210,5 @@ module.exports = {
   updatePost,
   deletePost,
   deleteUserPost,
+  likePost,
 };

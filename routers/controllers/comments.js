@@ -28,7 +28,29 @@ const addComment = (req, res) => {
 };
 
 const updateComment = (req, res) => {
-  // code
+  const { id } = req.params;
+  const { description, postID } = req.body;
+
+  commentsModel
+    .findOneAndUpdate(
+      { _id: id, post: postID, createdBy: req.token.id, deleted: false },
+      {
+        description,
+      },
+      { new: true }
+    )
+    .then((result) => {
+      if (result) {
+        res.status(200).json(result);
+      } else {
+        res
+          .status(404)
+          .json({ message: `There is no todo with this ID: ${id}` });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const deleteComment = (req, res) => {

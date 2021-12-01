@@ -81,7 +81,26 @@ const updatePost = (req, res) => {
 };
 
 const deletePost = (req, res) => {
-  // code
+  const { id } = req.params;
+
+  postsModel
+    .findOneAndUpdate(
+      { _id: id, createdBy: req.token.id, deleted: false },
+      { deleted: true },
+      { new: true }
+    )
+    .then((result) => {
+      if (result) {
+        res.status(200).json({ message: "The Post has been deleted successfully" });
+      } else {
+        res
+          .status(404)
+          .json({ message: `There is no todo with this ID: ${id}` });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json(err);
+    });
 };
 
 const deleteUserPost = (req, res) => {

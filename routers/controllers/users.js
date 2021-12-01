@@ -1,4 +1,7 @@
 const usersModel = require("./../../db/models/users");
+const postsModel = require("./../../db/models/posts");
+const commentsModel = require("./../../db/models/comments");
+const likesModel = require("./../../db/models/likes");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -116,25 +119,37 @@ const deleteAccount = (req, res) => {
     .then((result) => {
       if (result) {
         postsModel
-          .updateMany({ createdBy: req.token.id, deleted: false }, { deleted: true })
+          .updateMany(
+            { createdBy: req.token.id, deleted: false },
+            { deleted: true }
+          )
           .then(() => {
-            console.log(`All the posts for user:${id} has been deleted`);
+            console.log(
+              `All the posts for user:${req.token.username} has been deleted`
+            );
           })
           .catch((err) => {
             console.log(err);
           });
         commentsModel
-          .updateMany({ createdBy: req.token.id, deleted: false }, { deleted: true })
+          .updateMany(
+            { createdBy: req.token.id, deleted: false },
+            { deleted: true }
+          )
           .then(() => {
-            console.log(`All the comments for user:${id} has been deleted`);
+            console.log(
+              `All the comments for user:${req.token.username} has been deleted`
+            );
           })
           .catch((err) => {
             console.log(err);
           });
         likesModel
-          .updateMany({ createdBy: req.token.id, deleted: false }, { deleted: true })
+          .updateMany({ createdBy: req.token.id, like: true }, { like: false })
           .then(() => {
-            console.log(`All the likes for user:${id} has been deleted`);
+            console.log(
+              `All the likes for user:${req.token.username} has been deleted`
+            );
           })
           .catch((err) => {
             console.log(err);
@@ -159,25 +174,37 @@ const deleteUser = (req, res) => {
     .then((result) => {
       if (result) {
         postsModel
-          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
+          .updateMany(
+            { createdBy: id, deleted: false },
+            { deleted: true }
+          )
           .then(() => {
-            console.log(`All the posts for user:${id} has been deleted`);
+            console.log(
+              `All the posts for user:${id} has been deleted`
+            );
           })
           .catch((err) => {
             console.log(err);
           });
         commentsModel
-          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
+          .updateMany(
+            { createdBy: id, deleted: false },
+            { deleted: true }
+          )
           .then(() => {
-            console.log(`All the comments for user:${id} has been deleted`);
+            console.log(
+              `All the comments for user:${id} has been deleted`
+            );
           })
           .catch((err) => {
             console.log(err);
           });
         likesModel
-          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
+          .updateMany({ createdBy: id, like: true }, { like: false })
           .then(() => {
-            console.log(`All the likes for user:${id} has been deleted`);
+            console.log(
+              `All the likes for user:${id} has been deleted`
+            );
           })
           .catch((err) => {
             console.log(err);

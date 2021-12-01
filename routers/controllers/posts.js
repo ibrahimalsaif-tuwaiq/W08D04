@@ -178,6 +178,22 @@ const deletePost = (req, res) => {
     )
     .then((result) => {
       if (result) {
+        commentsModel
+          .updateMany({ post: id, deleted: false }, { deleted: true })
+          .then(() => {
+            console.log(`All the comments for post:${id} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        likesModel
+          .updateMany({ post: id, like: true }, { like: false })
+          .then(() => {
+            console.log(`All the likes for post:${id} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         res
           .status(200)
           .json({ message: "The Post has been deleted successfully" });
@@ -203,6 +219,22 @@ const deleteUserPost = (req, res) => {
     )
     .then((result) => {
       if (result) {
+        commentsModel
+          .updateMany({ post: postID, deleted: false }, { deleted: true })
+          .then(() => {
+            console.log(`All the comments for post:${postID} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        likesModel
+          .updateMany({ post: postID, like: true }, { like: false })
+          .then(() => {
+            console.log(`All the likes for post:${postID} has been deleted`);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
         res
           .status(200)
           .json({ message: "The Post has been deleted successfully" });

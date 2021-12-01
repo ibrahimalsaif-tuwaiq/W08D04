@@ -25,6 +25,10 @@ app.use(usersRouter);
 const postsRouter = require("./routers/routes/posts");
 app.use(postsRouter);
 
+// Comments Router
+const commentsRouter = require("./routers/routes/comments");
+app.use(commentsRouter);
+
 // Get PORT variable from .env
 const PORT = process.env.PORT;
 

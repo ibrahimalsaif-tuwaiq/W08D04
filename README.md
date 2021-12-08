@@ -2,6 +2,14 @@
 
 This is a backend for a social media website built in Express.
 
+##  Entity Relationship Diagram
+
+![ERD digram](https://github.com/ibrahimalsaif-tuwaiq/W08D04/blob/main/digrams/soical%20media%20ERD.jpg?raw=true)
+
+## UML Diagram
+
+![UML digram](https://github.com/ibrahimalsaif-tuwaiq/W08D04/blob/main/digrams/soical%20media%20backend%20UML.jpg?raw=true)
+
 ## Getting Started
 
 ### Installing Dependencies

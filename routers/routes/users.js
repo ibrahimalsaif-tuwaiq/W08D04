@@ -7,6 +7,8 @@ require("./../../Config/passport");
 const {
   signup,
   verifyAccount,
+  checkEmail,
+  resetPassword,
   login,
   getUsers,
   deleteAccount,
@@ -19,6 +21,8 @@ const usersRouter = express.Router();
 
 usersRouter.post("/signup", signup);
 usersRouter.post("/verify_account", verifyAccount);
+usersRouter.post("/check_email", checkEmail);
+usersRouter.post("/reset_password", resetPassword);
 usersRouter.post("/login", login);
 usersRouter.get(
   "/auth/google",

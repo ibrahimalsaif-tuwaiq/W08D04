@@ -16,6 +16,15 @@ const SALT = Number(process.env.SALT);
 // Get SECRET_KEY variable from .env
 const SECRET = process.env.SECRET_KEY;
 
+// Email transport
+const transport = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
 const signup = async (req, res) => {
   const { email, username, password, avatar, role } = req.body;
 
@@ -37,14 +46,6 @@ const signup = async (req, res) => {
       );
     }
 
-    const transport = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-
     const newUser = new usersModel({
       email: lowerCaseEmail,
       username: lowerCaseUsername,
@@ -58,7 +59,6 @@ const signup = async (req, res) => {
     newUser
       .save()
       .then((result) => {
-        res.status(201).json(result);
         transport
           .sendMail({
             from: process.env.EMAIL,
@@ -72,6 +72,7 @@ const signup = async (req, res) => {
               </div>`,
           })
           .catch((err) => console.log(err));
+        res.status(201).json(result);
       })
       .catch((err) => {
         res.status(400).json(err);
@@ -91,6 +92,71 @@ const verifyAccount = async (req, res) => {
   if (user.activeCode == code) {
     usersModel
       .findByIdAndUpdate(id, { active: true, activeCode: "" }, { new: true })
+      .then((result) => {
+        res.status(200).json(result);
+      })
+      .catch((error) => {
+        res.status(400).json(error);
+      });
+  } else {
+    res.status(400).json("Wrong Code");
+  }
+};
+
+const checkEmail = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await usersModel.findOne({ email });
+
+  if (user) {
+    let passwordCode = "";
+    const characters = "0123456789";
+    for (let i = 0; i < 4; i++) {
+      passwordCode += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+
+    usersModel
+      .findByIdAndUpdate(user._id, { passwordCode }, { new: true })
+      .then((result) => {
+        transport
+          .sendMail({
+            from: process.env.EMAIL,
+            to: result.email,
+            subject: "Reset Your Password",
+            html: `<h1>Reset Your Password</h1>
+              <h2>Hello ${result.username}</h2>
+              <h4>CODE: ${passwordCode}</h4>
+              <p>Please enter the code on the following link and reset your password</p>
+              <a href=http://localhost:3000/reset_password/${result._id}> Click here</a>
+              </div>`,
+          })
+          .catch((err) => console.log(err));
+        res.status(200).json(result);
+      })
+      .catch((error) => {
+        res.status(400).json(error);
+      });
+  } else {
+    res.status(400).json("No user with this email");
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { id, code, password } = req.body;
+
+  const user = await usersModel.findOne({ _id: id });
+
+  if (user.passwordCode == code) {
+    const hashedPassword = await bcrypt.hash(password, SALT);
+
+    usersModel
+      .findByIdAndUpdate(
+        id,
+        { password: hashedPassword, passwordCode: "" },
+        { new: true }
+      )
       .then((result) => {
         res.status(200).json(result);
       })
@@ -274,6 +340,8 @@ const deleteUser = (req, res) => {
 module.exports = {
   signup,
   verifyAccount,
+  checkEmail,
+  resetPassword,
   login,
   getUsers,
   deleteAccount,

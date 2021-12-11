@@ -190,31 +190,37 @@ const login = (req, res) => {
     .then(async (result) => {
       if (result) {
         if (result.deleted === false) {
-          if (
-            result.email == lowerCaseIdentifier ||
-            result.username == lowerCaseIdentifier
-          ) {
-            const matchedPassword = await bcrypt.compare(
-              password,
-              result.password
-            );
+          if (result.active === true) {
+            if (
+              result.email == lowerCaseIdentifier ||
+              result.username == lowerCaseIdentifier
+            ) {
+              const matchedPassword = await bcrypt.compare(
+                password,
+                result.password
+              );
 
-            if (matchedPassword) {
-              const payload = {
-                id: result._id,
-                email: result.email,
-                username: result.username,
-                role: result.role.role,
-                deleted: result.deleted,
-              };
+              if (matchedPassword) {
+                const payload = {
+                  id: result._id,
+                  email: result.email,
+                  username: result.username,
+                  role: result.role.role,
+                  deleted: result.deleted,
+                };
 
-              const options = {
-                expiresIn: "60m",
-              };
+                const options = {
+                  expiresIn: "60m",
+                };
 
-              const token = jwt.sign(payload, SECRET, options);
+                const token = jwt.sign(payload, SECRET, options);
 
-              res.status(200).json({ result, token });
+                res.status(200).json({ result, token });
+              } else {
+                res
+                  .status(400)
+                  .json({ message: "Invalid Email/Username or Password!!" });
+              }
             } else {
               res
                 .status(400)
@@ -222,8 +228,8 @@ const login = (req, res) => {
             }
           } else {
             res
-              .status(400)
-              .json({ message: "Invalid Email/Username or Password!!" });
+              .status(404)
+              .json({ message: "Your account is not activated please check your email" });
           }
         } else {
           res

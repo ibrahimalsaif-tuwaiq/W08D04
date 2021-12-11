@@ -23,9 +23,13 @@ passport.use(
       const email = profile.email.toLowerCase();
       const username = profile.given_name.toLowerCase();
 
-      const user = await usersModel.findOne({ email }).populate("role");
+      const user = await usersModel
+        .findOne({
+          $or: [{ username }, { email }],
+        })
+        .populate("role");
 
-      if (user) {
+      if (user && user.password) {
         const payload = {
           id: user._id,
           email: user.email,

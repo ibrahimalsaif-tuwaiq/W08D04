@@ -9,6 +9,7 @@ const {
   verifyAccount,
   checkEmail,
   resetPassword,
+  logout,
   login,
   getUsers,
   deleteAccount,
@@ -23,6 +24,7 @@ usersRouter.post("/signup", signup);
 usersRouter.post("/verify_account", verifyAccount);
 usersRouter.post("/check_email", checkEmail);
 usersRouter.post("/reset_password", resetPassword);
+usersRouter.get("/logout", logout);
 usersRouter.post("/login", login);
 usersRouter.get(
   "/auth/google",

@@ -168,6 +168,15 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  try {
+    req.logout();
+    res.status(200).json("user logged out");
+  } catch (error) {
+    res.status(400).json("somthing went wrong");
+  }
+};
+
 const login = (req, res) => {
   const { identifier, password } = req.body;
 
@@ -342,6 +351,7 @@ module.exports = {
   verifyAccount,
   checkEmail,
   resetPassword,
+  logout,
   login,
   getUsers,
   deleteAccount,

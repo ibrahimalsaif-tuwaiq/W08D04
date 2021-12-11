@@ -6,14 +6,14 @@ const getPosts = async (req, res) => {
   let result = [];
 
   try {
-    const posts = await postsModel.find({
-      createdBy: req.token.id,
-      deleted: false,
-    });
+    const posts = await postsModel
+      .find({
+        deleted: false,
+      })
+      .populate("createdBy");
 
     if (posts.length > 0) {
-
-      for(let i = 0; i < posts.length; i++) {
+      for (let i = 0; i < posts.length; i++) {
         const comments = await commentsModel.find({
           post: posts[i].id,
           deleted: false,
@@ -37,8 +37,7 @@ const getPosts = async (req, res) => {
             likes: likes.length,
           });
         }
-      };
-
+      }
       res.status(200).json(result);
     } else {
       res.status(404).json({ message: "There is no posts yet!!" });
@@ -55,7 +54,6 @@ const getPost = async (req, res) => {
     const post = await postsModel
       .findOne({
         _id: id,
-        createdBy: req.token.id,
         deleted: false,
       })
       .populate("createdBy");
@@ -74,12 +72,12 @@ const getPost = async (req, res) => {
 
     if (post) {
       if (comments.length > 0) {
-        res.status(200).json({ post, comments, likes: likes.length });
+        res.status(200).json({ post, comments, likes: likes });
       } else {
         res.status(200).json({
           post,
           comments: "there is no comments yet!!",
-          likes: likes.length,
+          likes: likes,
         });
       }
     } else {

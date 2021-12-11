@@ -14,12 +14,21 @@ const usersSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   avatar: {
     type: String,
     default:
       "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
+  },
+  passwordCode: {
+    type: String,
+  },
+  activeCode: {
+    type: String,
+  },
+  active: {
+    type: Boolean,
+    default: false,
   },
   role: {
     type: mongoose.Schema.Types.ObjectId,

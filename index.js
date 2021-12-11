@@ -1,7 +1,11 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+const cors = require("cors");
+const passport = require("passport");
+const session = require("express-session");
 require("./db");
+require("./Config/passport");
 
 // Config .env file
 dotenv.config();
@@ -11,7 +15,13 @@ const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 app.use(morgan("dev"));
+app.use(
+  session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Roles Router
 const rolesRouter = require("./routers/routes/roles");

@@ -20,24 +20,37 @@ const signup = async (req, res) => {
 
   const lowerCaseEmail = email.toLowerCase();
   const lowerCaseUsername = username.toLowerCase();
-  const hashedPassword = await bcrypt.hash(password, SALT);
 
-  const newUser = new usersModel({
-    email: lowerCaseEmail,
-    username: lowerCaseUsername,
-    password: hashedPassword,
-    avatar,
-    role,
+  const userExists = await usersModel.findOne({
+    $or: [{ username: lowerCaseUsername }, { email: lowerCaseEmail }],
   });
 
-  newUser
-    .save()
-    .then((result) => {
-      res.status(201).json(result);
-    })
-    .catch((err) => {
-      res.status(400).json(err);
+  if (!userExists) {
+    const hashedPassword = await bcrypt.hash(password, SALT);
+
+    const newUser = new usersModel({
+      email: lowerCaseEmail,
+      username: lowerCaseUsername,
+      password: hashedPassword,
+      passwordCode: "",
+      activeCode,
+      avatar,
+      role,
     });
+
+    newUser
+      .save()
+      .then((result) => {
+        res.status(201).json(result);
+      })
+      .catch((err) => {
+        res.status(400).json(err);
+      });
+  } else {
+    res.json({
+      message: "Email or Username already taken!",
+    });
+  }
 };
 
 const login = (req, res) => {
@@ -174,27 +187,17 @@ const deleteUser = (req, res) => {
     .then((result) => {
       if (result) {
         postsModel
-          .updateMany(
-            { createdBy: id, deleted: false },
-            { deleted: true }
-          )
+          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
           .then(() => {
-            console.log(
-              `All the posts for user:${id} has been deleted`
-            );
+            console.log(`All the posts for user:${id} has been deleted`);
           })
           .catch((err) => {
             console.log(err);
           });
         commentsModel
-          .updateMany(
-            { createdBy: id, deleted: false },
-            { deleted: true }
-          )
+          .updateMany({ createdBy: id, deleted: false }, { deleted: true })
           .then(() => {
-            console.log(
-              `All the comments for user:${id} has been deleted`
-            );
+            console.log(`All the comments for user:${id} has been deleted`);
           })
           .catch((err) => {
             console.log(err);
@@ -202,9 +205,7 @@ const deleteUser = (req, res) => {
         likesModel
           .updateMany({ createdBy: id, like: true }, { like: false })
           .then(() => {
-            console.log(
-              `All the likes for user:${id} has been deleted`
-            );
+            console.log(`All the likes for user:${id} has been deleted`);
           })
           .catch((err) => {
             console.log(err);
@@ -221,4 +222,10 @@ const deleteUser = (req, res) => {
     });
 };
 
-module.exports = { signup, login, getUsers, deleteAccount, deleteUser };
+module.exports = {
+  signup,
+  login,
+  getUsers,
+  deleteAccount,
+  deleteUser,
+};

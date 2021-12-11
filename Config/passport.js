@@ -15,18 +15,15 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://social-media-project-w08d04.herokuapp.com/auth/google/callback",
+      callbackURL:
+        "https://social-media-project-w08d04.herokuapp.com/auth/google/callback",
       passReqToCallback: true,
     },
     async (request, accessToken, refreshToken, profile, done) => {
       const email = profile.email.toLowerCase();
       const username = profile.given_name.toLowerCase();
 
-      const user = await usersModel
-        .findOne({
-          $or: [{ username }, { email }],
-        })
-        .populate("role");
+      const user = await usersModel.findOne({ email }).populate("role");
 
       if (user) {
         const payload = {

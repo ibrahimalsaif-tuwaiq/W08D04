@@ -5,6 +5,7 @@ const likesModel = require("./../../db/models/likes");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 // Config .env file
 dotenv.config();
@@ -28,6 +29,22 @@ const signup = async (req, res) => {
   if (!userExists) {
     const hashedPassword = await bcrypt.hash(password, SALT);
 
+    let activeCode = "";
+    const characters = "0123456789";
+    for (let i = 0; i < 4; i++) {
+      activeCode += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+
+    const transport = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
     const newUser = new usersModel({
       email: lowerCaseEmail,
       username: lowerCaseUsername,
@@ -42,6 +59,19 @@ const signup = async (req, res) => {
       .save()
       .then((result) => {
         res.status(201).json(result);
+        transport
+          .sendMail({
+            from: process.env.EMAIL,
+            to: lowerCaseEmail,
+            subject: "Please confirm your account",
+            html: `<h1>Email Confirmation</h1>
+              <h2>Hello ${lowerCaseUsername}</h2>
+              <h4>CODE: ${activeCode}</h4>
+              <p>Thank you for registering. Please confirm your email by entring the code on the following link</p>
+              <a href=http://localhost:3000/verify_account/${result._id}> Click here</a>
+              </div>`,
+          })
+          .catch((err) => console.log(err));
       })
       .catch((err) => {
         res.status(400).json(err);
@@ -50,6 +80,25 @@ const signup = async (req, res) => {
     res.json({
       message: "Email or Username already taken!",
     });
+  }
+};
+
+const verifyAccount = async (req, res) => {
+  const { id, code } = req.body;
+
+  const user = await usersModel.findOne({ _id: id });
+
+  if (user.activeCode == code) {
+    usersModel
+      .findByIdAndUpdate(id, { active: true, activeCode: "" }, { new: true })
+      .then((result) => {
+        res.status(200).json(result);
+      })
+      .catch((error) => {
+        res.status(400).json(error);
+      });
+  } else {
+    res.status(400).json("Wrong Code");
   }
 };
 
@@ -224,6 +273,7 @@ const deleteUser = (req, res) => {
 
 module.exports = {
   signup,
+  verifyAccount,
   login,
   getUsers,
   deleteAccount,

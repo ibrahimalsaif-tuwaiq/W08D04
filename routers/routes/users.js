@@ -6,6 +6,7 @@ require("./../../Config/passport");
 
 const {
   signup,
+  verifyAccount,
   login,
   getUsers,
   deleteAccount,
@@ -17,6 +18,7 @@ const authorization = require("../middlewares/authorization");
 const usersRouter = express.Router();
 
 usersRouter.post("/signup", signup);
+usersRouter.post("/verify_account", verifyAccount);
 usersRouter.post("/login", login);
 usersRouter.get(
   "/auth/google",

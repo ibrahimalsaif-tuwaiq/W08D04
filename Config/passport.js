@@ -29,7 +29,7 @@ passport.use(
         })
         .populate("role");
 
-      if (user && user.password) {
+      if (user) {
         const payload = {
           id: user._id,
           email: user.email,

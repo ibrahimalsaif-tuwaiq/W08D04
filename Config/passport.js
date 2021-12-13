@@ -16,7 +16,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
-        "https://ibrahim-social-media-project.netlify.app//auth/google/callback",
+        "https://ibrahim-social-media-project.netlify.app/auth/google/callback",
       passReqToCallback: true,
     },
     async (request, accessToken, refreshToken, profile, done) => {

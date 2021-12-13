@@ -68,7 +68,7 @@ const signup = async (req, res) => {
               <h2>Hello ${lowerCaseUsername}</h2>
               <h4>CODE: ${activeCode}</h4>
               <p>Thank you for registering. Please confirm your email by entring the code on the following link</p>
-              <a href=ibrahim-social-media-project.netlify.app/verify_account/${result._id}> Click here</a>
+              <a href="https://ibrahim-social-media-project.netlify.app/verify_account/${result._id}"> Click here</a>
               </div>`,
           })
           .catch((err) => console.log(err));
@@ -129,7 +129,7 @@ const checkEmail = async (req, res) => {
               <h2>Hello ${result.username}</h2>
               <h4>CODE: ${passwordCode}</h4>
               <p>Please enter the code on the following link and reset your password</p>
-              <a href=ibrahim-social-media-project.netlify.app/reset_password/${result._id}> Click here</a>
+              <a href="https://ibrahim-social-media-project.netlify.app/reset_password/${result._id}"> Click here</a>
               </div>`,
           })
           .catch((err) => console.log(err));
